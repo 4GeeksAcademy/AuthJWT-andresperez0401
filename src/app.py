@@ -5,6 +5,8 @@ import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
+from flask_jwt_extended import JWTManager
+from datetime import timedelta
 from api.utils import APIException, generate_sitemap
 from api.models import db
 from api.routes import api
@@ -30,6 +32,12 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
+
+# Configuraciones de JWT
+app.config["JWT_SECRET_KEY"] = "clave-secreta"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+
+jwt = JWTManager(app)
 
 # add the admin
 setup_admin(app)
