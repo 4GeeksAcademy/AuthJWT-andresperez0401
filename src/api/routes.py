@@ -27,7 +27,7 @@ def signup():
 
     if user is not None:
         # The user was found on the database
-        return jsonify({"msg": "User already exists"}), 409
+        return jsonify({"msg": "User already exists"}), 401
 
     # Create a new user and add it to the database
     new_user = User(email=email, password=password, is_active=True)

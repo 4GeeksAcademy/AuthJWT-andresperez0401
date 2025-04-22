@@ -3,41 +3,42 @@ import { useNavigate, Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import "../index.css";
 
-export const Home = () => {
+export const Register = () => {
   const { store, dispatch } = useGlobalReducer();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-   // Cuando cambie token, vamos al dashboard y mostramos alerta
-	useEffect(() => {
-		if (store.token) {
-			alert("¡Login exitoso!");
-			navigate("/dashboard");
-		}
-	}, [store.token, navigate]);
+  // Cuando el registro sea exitoso, mostramos alerta y vamos al login
+    useEffect(() => {
+        if (store.message) {
+            alert("Registro exitoso. Redirigiendo al login...");
+            navigate("/");
+        }
+    }, [store.message, navigate]);
 
-	// Cuando haya error, limpiarlo después de 5s
-	useEffect(() => {
-		if (store.error) {
-	//		alert(store.error);
-			setTimeout(() => dispatch({ type: 'clear_error' }), 3000);
-		}
-	}, [store.error, dispatch]);
+    // Limpiar error después de 5s
+    useEffect(() => {
+        if (store.error) {
+        //    alert(store.error);
+            setTimeout(() => dispatch({ type: 'clear_error' }), 3000);
+        //    navigate("/");
+        }
+    }, [store.error, dispatch]);
 
 
-  //Manejo del boton enviar
-  const handleSubmit = async (e) => {
+ //Manejo al pulsar enviar
+ const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email.trim() || !password.trim()) {
-      dispatch({ type: 'login_error', payload: "Todos los campos son requeridos" });
+      dispatch({ type: 'add_user_error', payload: "Todos los campos son requeridos" });
       return;
     }
 
     try {
       const resp = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/login`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -46,20 +47,11 @@ export const Home = () => {
       );
       const data = await resp.json();
 
-      if (!resp.ok) throw new Error(data.msg || "Error de autenticación");
+      if (!resp.ok) throw new Error(data.msg || "Error al registrar usuario");
 
-      // dispatch exitoso
-      dispatch({
-        type: "login_success",
-        payload: {
-          token: data.token,
-          user: { email, id: data.user_id }
-        }
-      });
-
+      dispatch({ type: "add_user_success", payload: data.msg });
     } catch (err) {
-      dispatch({ type: "login_error", payload: err.message });
-	  
+      dispatch({ type: "add_user_error", payload: err.message });
     }
   };
 
@@ -69,10 +61,14 @@ export const Home = () => {
         <div className="col-md-6 col-lg-4">
           <div className="card shadow">
             <div className="card-body">
-              <h2 className="card-title text-center mb-4">Iniciar Sesión</h2>
+              <h2 className="card-title text-center mb-4">Registro</h2>
               
               {store.error && (
                 <div className="alert alert-danger">{store.error}</div>
+              )}
+              
+              {store.message && (
+                <div className="alert alert-success">{store.message}</div>
               )}
 
               <form onSubmit={handleSubmit}>
@@ -102,12 +98,12 @@ export const Home = () => {
                   type="submit" 
                   className="btn btn-primary w-100 mb-3"
                 >
-                  Ingresar
+                  Registrarse
                 </button>
 
                 <div className="text-center">
-                  <Link to="/register" className="btn btn-link">
-                    Crear nueva cuenta
+                  <Link to="/" className="btn btn-link"  onClick={() => dispatch({ type: "clear_error" })}>
+                    Volver al Login
                   </Link>
                 </div>
               </form>

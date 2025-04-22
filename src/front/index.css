@@ -1,0 +1,87 @@
+/* index.css */
+
+/* Body background and general font style */
+body {
+    background-color: #f4f7fa;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  /* Container for centering the form */
+  .text-center {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Heading */
+  .display-4 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Form */
+  .form-signin {
+    width: 100%;
+  }
+  
+  .form-signin .form-label {
+    color: #555;
+  }
+  
+  .form-signin .form-control {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 12px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+  
+  .form-signin .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.25rem rgba(38, 143, 255, 0.25);
+  }
+  
+  .form-signin .btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .form-signin .btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .form-signin .text-danger {
+    font-size: 0.875rem;
+    margin-top: 10px;
+    color: red;
+  }
+  
+  /* Alert styling for error or info messages */
+  .alert {
+    font-size: 1rem;
+    margin-top: 20px;
+  }
+  
+  /* Add spacing for logo/image */
+  .img-fluid {
+    max-width: 150px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+  }
+  
+  /* If you want a light background for the login section */
+  .container {
+    padding-top: 60px;
+  }
+  
