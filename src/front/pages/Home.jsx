@@ -13,7 +13,7 @@ export const Home = () => {
 	useEffect(() => {
 		if (store.token) {
 			alert("¡Login exitoso!");
-			navigate("/dashboard");
+			navigate("/private");
 		}
 	}, [store.token, navigate]);
 
