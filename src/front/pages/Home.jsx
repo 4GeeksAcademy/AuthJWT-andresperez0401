@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import "../index.css";
+import { login } from "../store";
 
 export const Home = () => {
   const { store, dispatch } = useGlobalReducer();
@@ -9,21 +10,21 @@ export const Home = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-   // Cuando cambie token, vamos al dashboard y mostramos alerta
-	useEffect(() => {
-		if (store.token) {
-			alert("¡Login exitoso!");
-			navigate("/private");
-		}
-	}, [store.token, navigate]);
+  // Cuando cambie token, vamos al dashboard y mostramos alerta
+  useEffect(() => {
+    if (store.token) {
+      alert("¡Login exitoso!");
+      navigate("/private");
+    }
+  }, [store.token, navigate]);
 
-	// Cuando haya error, limpiarlo después de 5s
-	useEffect(() => {
-		if (store.error) {
-	//		alert(store.error);
-			setTimeout(() => dispatch({ type: 'clear_error' }), 3000);
-		}
-	}, [store.error, dispatch]);
+  // Cuando haya error, limpiarlo después de 5s
+  useEffect(() => {
+    if (store.error) {
+      //		alert(store.error);
+      setTimeout(() => dispatch({ type: 'clear_error' }), 3000);
+    }
+  }, [store.error, dispatch]);
 
 
   //Manejo del boton enviar
@@ -34,32 +35,9 @@ export const Home = () => {
       dispatch({ type: 'login_error', payload: "Todos los campos son requeridos" });
       return;
     }
-
-    try {
-      const resp = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        }
-      );
-      const data = await resp.json();
-
-      if (!resp.ok) throw new Error(data.msg || "Error de autenticación");
-
-      // dispatch exitoso
-      dispatch({
-        type: "login_success",
-        payload: {
-          token: data.token,
-          user: { email, id: data.user_id }
-        }
-      });
-
-    } catch (err) {
-      dispatch({ type: "login_error", payload: err.message });
-	  
+    let resp = await login(email, password, dispatch)
+    if (resp) {
+      console.log("Login exitoso")
     }
   };
 
@@ -70,7 +48,7 @@ export const Home = () => {
           <div className="card shadow">
             <div className="card-body">
               <h2 className="card-title text-center mb-4">Iniciar Sesión</h2>
-              
+
               {store.error && (
                 <div className="alert alert-danger">{store.error}</div>
               )}
@@ -98,8 +76,8 @@ export const Home = () => {
                   />
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="btn btn-primary w-100 mb-3"
                 >
                   Ingresar
