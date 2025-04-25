@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import "../index.css";
+import { register } from "../store";
 
 export const Register = () => {
   const { store, dispatch } = useGlobalReducer();
@@ -13,6 +14,7 @@ export const Register = () => {
     useEffect(() => {
         if (store.message) {
             alert("Registro exitoso. Redirigiendo al login...");
+            setTimeout(() => dispatch({ type: 'clear_error' }), 2000);
             navigate("/");
         }
     }, [store.message, navigate]);
@@ -36,23 +38,11 @@ export const Register = () => {
       return;
     }
 
-    try {
-      const resp = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/signup`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        }
-      );
-      const data = await resp.json();
-
-      if (!resp.ok) throw new Error(data.msg || "Error al registrar usuario");
-
-      dispatch({ type: "add_user_success", payload: data.msg });
-    } catch (err) {
-      dispatch({ type: "add_user_error", payload: err.message });
+    let resp = await register(email, password, dispatch);
+    if (resp) {
+      console.log("Usuario Agregado");
     }
+    
   };
 
   return (

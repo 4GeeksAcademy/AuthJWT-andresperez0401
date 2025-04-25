@@ -56,7 +56,7 @@ export default function storeReducer(store, action = {}) {
 
 export const login = async (email, password, dispatch) => {
   try {
-    const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/login`, {
+    const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -78,3 +78,23 @@ export const login = async (email, password, dispatch) => {
     dispatch({ type: "login_error", payload: err.message });
   }
 };
+
+export const register = async (email, password, dispatch) => {
+  try {
+    const resp = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/signup`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      }
+    );
+    const data = await resp.json();
+
+    if (!resp.ok) throw new Error(data.msg || "Error al registrar usuario");
+
+    dispatch({ type: "add_user_success", payload: data.msg });
+  } catch (err) {
+    dispatch({ type: "add_user_error", payload: err.message });
+  }
+}
